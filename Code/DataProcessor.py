@@ -1,6 +1,6 @@
 import numpy as np
 
-def voltage_to_strain(raw_voltage: float) -> float:
+def voltage_to_strain(raw_voltage: float|np.ndarray[float]) -> float|np.ndarray[float]:
     '''
     Convert raw voltage readings from a strain gauge circuit to strain.
 
@@ -35,7 +35,7 @@ def voltage_to_strain(raw_voltage: float) -> float:
     return strain
 
 
-def shear_strain_to_stress(E: float, poisson_ratio: float, strain: float) -> float:
+def shear_strain_to_stress(E: float, poisson_ratio: float, strain: float|np.ndarray[float]) -> float|np.ndarray[float]:
     '''
     Calculate stress from shear strain by converting Young's modulus (E) to shear modulus (G).
     
