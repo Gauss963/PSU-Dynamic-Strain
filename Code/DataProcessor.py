@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.signal
 
 def voltage_to_strain(raw_voltage: float|np.ndarray[float]) -> float|np.ndarray[float]:
     '''
@@ -52,3 +53,10 @@ def shear_strain_to_stress(E: float, poisson_ratio: float, strain: float|np.ndar
     stress = G * strain
     
     return stress
+
+def highpass_filter(data, cutoff, fs, order=4):
+    nyquist = 0.5 * fs
+    normal_cutoff = cutoff / nyquist
+    b, a = scipy.signal.butter(order, normal_cutoff, btype = 'high', analog=False)
+    filtered_data = scipy.signal.filtfilt(b, a, data)
+    return filtered_data
