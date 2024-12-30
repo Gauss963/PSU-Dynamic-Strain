@@ -75,11 +75,10 @@ def fitting_function(X_c: float, C_f: float, Gamma: float, x: float|np.ndarray, 
 
 def chi_square(X_c: float, Gamma: float, C_f: float, X: np.ndarray, Y: np.ndarray):
     '''
-    A and B are the parameters to be fitted (in the question you said 2000 and 20000 are the goals for fitting)
-    Other parameters (C_f, 8e-3) must be hard-coded here or obtained externally.
+    X_c and Gamma are the parameters to be fitted
     '''
-    model = fitting_function(X_c, C_f, Gamma, X, 8e-3) / 10**6
+    MODEL = fitting_function(X_c, C_f, Gamma, X, Y) / 10**6
     
     # chi2 = sum( (data_i - model_i)^2 / sigma_i^2 )
-    chi2 = np.sum((Y - model)**2)
+    chi2 = np.sum((Y - MODEL)**2)
     return chi2
