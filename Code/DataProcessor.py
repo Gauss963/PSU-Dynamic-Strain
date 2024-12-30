@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.signal
 
+import CohesiveCrack
+
 def voltage_to_strain(raw_voltage: float|np.ndarray[float]) -> float|np.ndarray[float]:
     '''
     Convert raw voltage readings from a strain gauge circuit to strain.
@@ -60,3 +62,24 @@ def highpass_filter(data, cutoff, fs, order=4):
     b, a = scipy.signal.butter(order, normal_cutoff, btype = 'high', analog=False)
     filtered_data = scipy.signal.filtfilt(b, a, data)
     return filtered_data
+
+def fitting_function(X_c: float, C_f: float, Gamma: float, x: float|np.ndarray, y:float) -> float:
+    
+    # Gamma = 0.21  # Fracture energy (J/m^2)
+    E = 51e9      # Young's modulus (Pa)
+    nu = 0.25     # Poisson's ratio
+    C_s = 2760    # Shear wave speed (m/s)
+    C_d = 4790    # Longitudinal wave speed (m/s)
+    
+    return CohesiveCrack.delta_sigma_xy(x, y, X_c, C_f, C_s, C_d, nu, Gamma, E)
+
+def chi_square(X_c: float, Gamma: float, C_f: float, X: np.ndarray, Y: np.ndarray):
+    '''
+    A and B are the parameters to be fitted (in the question you said 2000 and 20000 are the goals for fitting)
+    Other parameters (C_f, 8e-3) must be hard-coded here or obtained externally.
+    '''
+    model = fitting_function(X_c, C_f, Gamma, X, 8e-3) / 10**6
+    
+    # chi2 = sum( (data_i - model_i)^2 / sigma_i^2 )
+    chi2 = np.sum((Y - model)**2)
+    return chi2
