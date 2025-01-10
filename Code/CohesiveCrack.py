@@ -79,6 +79,28 @@ def delta_sigma_xy(x, y, X_c, C_f, C_s, C_d, nu, Gamma, E):
     
     return delta_sigma
 
+def delta_sigma_xx(x, y, X_c, C_f, C_s, C_d, nu, Gamma, E):
+    alpha_s_value = alpha_s(C_f, C_s)
+    alpha_d_value = alpha_d(C_f, C_d)
+    D_value = D(alpha_s_value, alpha_d_value)
+    A2 = compute_A2(C_f, C_s, nu, D_value)
+    K2 = compute_K2(Gamma, E, nu, A2)
+    tau_p = compute_tau_p(K2, X_c)
+    
+    z_d_value = x + 1j * alpha_d_value * y
+    z_s_value = x + 1j * alpha_s_value * y
+    
+    M_z_d = M_of_z(tau_p, X_c, z_d_value)
+    M_z_s = M_of_z(tau_p, X_c, z_s_value)
+    
+    Sxx_tmp, Syy_tmp, Sxy_tmp = compute_stress_components(M_z_d, M_z_s, alpha_s_value, alpha_d_value)
+    
+    Sxx, Syy, Sxy = compute_stresses(Sxx_tmp, Syy_tmp, Sxy_tmp, alpha_s_value, D_value)
+    
+    delta_sigma = Sxx
+    
+    return delta_sigma
+
 def main() -> int:
 
     Gamma = 0.21  # Fracture energy (J/m^2)
@@ -94,17 +116,19 @@ def main() -> int:
 
     plt.figure(figsize=(8, 6))
     for i, y in enumerate(y_values):
-        delta_sigma = delta_sigma_xy(x, y, X_c, C_f, C_s, C_d, nu, Gamma, E)
+        # delta_sigma = delta_sigma_xy(x, y, X_c, C_f, C_s, C_d, nu, Gamma, E)
+        delta_sigma = delta_sigma_xx(x, y, X_c, C_f, C_s, C_d, nu, Gamma, E)
         plt.plot(x * 1000, delta_sigma / 1e5 + i * 5, '-.', label=f'y = {y * 1e3:.1f} mm')
 
     plt.xlabel('Rupture tip position x (mm)')
-    plt.ylabel('Shear stress fluctuation $\Delta \sigma_{xy}$ (MPa)')
+    # plt.ylabel('Shear stress fluctuation $\Delta \sigma_{xy}$ (MPa)')
+    plt.ylabel('Shear stress fluctuation $\Delta \sigma_{xx}$ (MPa)')
     plt.title('Shear stress fluctuation along the fault (Fig. 2 reproduction)')
     plt.axvline(0, color='k', linestyle='--', linewidth=1)
     plt.legend()
     plt.grid()
     plt.tight_layout()
-    plt.savefig('./Plot/example.pdf', dpi=900)
+    plt.savefig('./Plot/example_xx.pdf', dpi=900)
     # plt.show()
     
     return 0
