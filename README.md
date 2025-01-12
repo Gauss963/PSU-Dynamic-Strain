@@ -14,8 +14,6 @@ This repository contains Python scripts to perform data analysis related to cohe
 3. [Getting Started](#getting-started)
 4. [Usage](#usage)
 5. [Dependencies](#dependencies)
-6. [License](#license)
-7. [Contact](#contact)
 
 ---
 
