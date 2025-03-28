@@ -22,10 +22,14 @@ def do_waveform_plot(DATAS: list[np.ndarray], fs: float = 100000) -> str:
         TIME = TIME / fs
 
         ax = plt.subplot(gs[i, 0])
-        ax.plot(TIME, WAVEFORM_DATA, color = 'C0')
+        
+        max_index = np.argmax(WAVEFORM_DATA)
+        
+        ax.plot(TIME, WAVEFORM_DATA, color = 'C0', label = f'Max Index: {max_index}')
+        ax.axvline(x = TIME[max_index], color = 'red')
         ax.set_yticklabels([])
         ax.set_yticks([])
-        # ax.legend(loc = 'upper right')
+        ax.legend(loc = 'upper right')
 
     plt.tight_layout()
     plt.subplots_adjust(wspace=0.0, hspace=0.0)
