@@ -140,8 +140,6 @@ def do_deconvolution(SIGNAL_1: np.ndarray,
     if stabilizing_type == 'D':
         DECONV_TIME_DOMAIN = DECONV_TIME_DOMAIN_DAMP
 
-
-    
     # Do shifting
     total_len = int(len(DECONV_TIME_DOMAIN))
     midpoint = int(len(DECONV_TIME_DOMAIN) / 2)
